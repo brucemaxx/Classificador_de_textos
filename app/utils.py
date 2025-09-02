@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 
 # Certifique-se de que as stopwords foram baixadas
 try:
-    nltk.data.find('corpora/stowords')
+    nltk.data.find('corpora/stopwords')
 except nltk.downloader.DownloadError:
     nltk.download('stopwords')
     
