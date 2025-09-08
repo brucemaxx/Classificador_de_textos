@@ -182,13 +182,3 @@ Esta API pode ser facilmente integrada a diversas aplicações para melhorar a m
     
 
 ----------
-
-### **Melhorias Futuras**
-
--   **Aprimoramento do Modelo**: Treinar o modelo com um dataset maior e mais diversificado para melhorar a precisão.
-    
--   **Adição de Novas Categorias**: Incluir outras categorias de classificação, como notícias falsas (`fake-news`) ou _phishing_.
-    
--   **Deploy com Docker**: Criar um `Dockerfile` para empacotar a aplicação e facilitar a implantação em servidores.
-    
--   **Integração com Cloud**: Fazer o _deploy_ da API em serviços de nuvem como AWS, Google Cloud ou Azure.
