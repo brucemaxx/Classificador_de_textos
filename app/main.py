@@ -9,7 +9,7 @@ from app.utils import preprocess_text
 model = load_model()
 
 app = FastAPI(
-    title= "Classifador de Texto",
+    title="Classificador de Texto",
     description="API para detectar linguagem ofensiva ou spam em textos.",
     version="1.0.0"
 )
@@ -31,7 +31,7 @@ async def predict(payload: TextPayLoad):
     if not payload.text:
         raise HTTPException(status_code=400, detail="O campo 'text' não pode estar vazio.")
         
-    # Pré-processa o text de entrada
+    # Pré-processa o texto de entrada
     processed_text = preprocess_text(payload.text)
 
     # Faz a predição
@@ -46,13 +46,13 @@ async def predict(payload: TextPayLoad):
         is_offensive_or_spam = True
     elif prediction == 'spam':
         response_message = "Atenção: Este texto foi classificado como spam."
-        is_offenvise_or_spam = True
+        is_offensive_or_spam = True
     else:
-        response_message = "Nenhuma ameaça ou conteúdo ofensivo foi detectato neste  texto."
+        response_message = "Nenhuma ameaça ou conteúdo ofensivo foi detectado neste texto."
         
-        return {
-            "original_text": payload.text,
-            "classification": prediction,
-            "is_offensive_or_spam": is_offensive_or_spam,
-            "response_message": response_message
-        }
+    return {
+        "original_text": payload.text,
+        "classification": prediction,
+        "is_offensive_or_spam": is_offensive_or_spam,
+        "response_message": response_message
+    }
