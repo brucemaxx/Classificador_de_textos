@@ -2,8 +2,8 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from .model import load_model
-from .utils import preprocess_text
+from app.model import load_model
+from app.utils import preprocess_text
 
 # Carrega o modelo quando a API é iniciada
 model = load_model()

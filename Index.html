@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador de Texto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Classificador de Texto</h1>
+        <p class="text-center text-gray-500 mb-6">Analise um texto para detectar conteúdo ofensivo ou spam.</p>
+
+        <textarea 
+            id="textInput" class="w-full h-40 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all" placeholder="Digite ou cole seu texto aqui..."></textarea>
+
+        <button id="analyzeButton"
+            class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-all">
+            Analisar Texto
+        </button>
+
+        <div id="result" class="mt-6 p-4 rounded-md text-center hidden">
+            <p id="resultText" class="font-semibold"></p>
+        </div>
+    </div>
+
+    <script>
+        // Aqui acontece a mágica do JavaScript
+        const textInput = document.getElementById('textInput');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+
+        // URL da API de backend
+        const API_URL = 'http://127.0.0.1:8000/predict/';
+
+        //Função para chamar a API e obter a classificação
+        async function predictText(text) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro na requisição da API.');
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("Erro ao analisar o texto:", error);
+                return {
+                    response_message: "Erro ao se conectar com a API.",
+                    is_offensive_or_spam: true // Exibe em vermelho para indicar erro
+                };
+            }
+        }
+        
+        // Lógica do botão
+        analyzeButton.addEventListener('click', async () => {
+            const text = textInput.value.trim();
+            if (text === "") {
+                resultDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100');
+                resultDiv.classList.add('bg-red-100');
+                resultText.textContent = "Por favor, digite um texto para analisar.";
+                resultText.classList.remove('text-green-600', 'text-red-600');
+                resultText.classList.add('text-red-600');
+                return;
+            }
+
+            //Exibe "Analisando..." enquanto aguarda a resposta.
+            resultDiv.classList.remove('hidden', 'bg-red-100', 'bg-green-100');
+            resultDiv.classList.add('bg-gray-200');
+            resultText.textContent = "Analisando...";
+            resultText.classList.remove('text-green-600', 'text-red-600');
+            resultText.classList.add('text-gray-800');
+
+            // Chama a função de predição.
+            const result = await predictText(text);
+
+            // Atualiza a interface com a resposta da API.
+            resultDiv.classList.remove('bg-gray-200');
+
+            if (result.is_offensive_or_spam) {
+                resultDiv.classList.add('bg-red-100');
+                resultText.classList.add('text-red-600');
+                resultText.classList.remove('text-green-600');
+            } else {
+                resultDiv.classList.add('bg-green-100');
+                resultText.classList.add('text-green-600');
+                resultText.classList.remove('text-red-600');
+            }
+            resultText.textContent = result.response_message;
+        });
+
+    </script>
+
+</body>
+</html>
